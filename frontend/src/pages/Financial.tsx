@@ -67,7 +67,7 @@ export default function Financial() {
           <button
             key={t.key}
             onClick={() => { setTab(t.key); setStatusFilter(''); }}
-            className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+            className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors touch-manipulation ${
               tab === t.key ? 'border-primary-600 text-primary-600' : 'border-transparent text-gray-500 hover:text-gray-700'
             }`}
           >
@@ -163,7 +163,7 @@ export default function Financial() {
                       {item.status !== 'pago' && item.status !== 'cancelado' && (
                         <button
                           onClick={() => tab === 'receivable' ? handleReceivePayment(item.id) : handlePayBill(item.id)}
-                          className="flex items-center gap-1 text-xs text-green-600 hover:text-green-800"
+                          className="flex items-center gap-1 text-xs text-green-600 hover:text-green-800 touch-manipulation"
                         >
                           <CheckCircle className="w-3 h-3" /> {tab === 'receivable' ? 'Receber' : 'Pagar'}
                         </button>

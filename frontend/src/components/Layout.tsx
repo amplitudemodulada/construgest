@@ -55,7 +55,7 @@ export default function Layout() {
               end={item.end}
               onClick={() => setSidebarOpen(false)}
               className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                `flex items-center gap-3 px-3 py-3 lg:py-2.5 rounded-lg text-sm font-medium transition-colors touch-manipulation ${
                   isActive ? 'bg-primary-600 text-white' : 'text-gray-300 hover:bg-gray-800 hover:text-white'
                 }`
               }
@@ -85,20 +85,20 @@ export default function Layout() {
       <div className="flex-1 flex flex-col min-w-0">
         <header className="bg-white border-b border-gray-200 px-4 lg:px-6 py-3">
           <div className="flex items-center justify-between">
-            <button className="lg:hidden p-2 rounded-lg hover:bg-gray-100" onClick={() => setSidebarOpen(true)}>
+            <button className="lg:hidden p-2.5 rounded-lg hover:bg-gray-100 touch-manipulation" onClick={() => setSidebarOpen(true)}>
               {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
             <div className="flex items-center gap-4 ml-auto">
-              <button className="relative p-2 rounded-lg hover:bg-gray-100">
+              <button className="relative p-2.5 rounded-lg hover:bg-gray-100 touch-manipulation">
                 <Bell className="w-5 h-5 text-gray-500" />
                 <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
               </button>
               <div className="relative">
                 <button
                   onClick={() => setProfileOpen(!profileOpen)}
-                  className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100"
+                  className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 touch-manipulation"
                 >
-                  <div className="w-7 h-7 rounded-full bg-primary-600 flex items-center justify-center text-xs font-bold text-white">
+                  <div className="w-8 h-8 lg:w-7 lg:h-7 rounded-full bg-primary-600 flex items-center justify-center text-xs font-bold text-white">
                     {user?.full_name?.charAt(0) || '?'}
                   </div>
                   <span className="text-sm font-medium hidden sm:block">{user?.full_name}</span>
@@ -114,9 +114,9 @@ export default function Layout() {
                       </div>
                       <button
                         onClick={handleLogout}
-                        className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
-                      >
-                        <LogOut className="w-4 h-4" />
+                  className="flex items-center gap-2 w-full px-4 py-3 lg:py-2 text-sm text-red-600 hover:bg-red-50 touch-manipulation"
+                        >
+                          <LogOut className="w-4 h-4" />
                         Sair
                       </button>
                     </div>

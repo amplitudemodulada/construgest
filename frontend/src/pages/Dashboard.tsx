@@ -34,7 +34,7 @@ export default function Dashboard() {
     return (
       <div className="text-center py-12">
         <p className="text-gray-500">Erro ao carregar dados do dashboard.</p>
-        <button onClick={() => window.location.reload()} className="btn-primary mt-4">Tentar novamente</button>
+        <button onClick={() => window.location.reload()} className="btn-primary mt-4 touch-manipulation">Tentar novamente</button>
       </div>
     );
   }

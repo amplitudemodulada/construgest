@@ -59,7 +59,7 @@ function SupplierModal({ supplier, onClose, onSave }: SupplierModalProps) {
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl my-8" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
           <h2 className="text-lg font-semibold">{supplier ? 'Editar Fornecedor' : 'Novo Fornecedor'}</h2>
-          <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded-lg"><X className="w-5 h-5" /></button>
+          <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded-lg touch-manipulation"><X className="w-5 h-5" /></button>
         </div>
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {error && <div className="bg-red-50 text-red-700 px-4 py-2 rounded-lg text-sm">{error}</div>}
@@ -144,8 +144,8 @@ function SupplierModal({ supplier, onClose, onSave }: SupplierModalProps) {
             <textarea className="input-field" rows={2} value={form.notes} onChange={e => setForm({...form, notes: e.target.value})} />
           </div>
           <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
-            <button type="button" onClick={onClose} className="btn-secondary">Cancelar</button>
-            <button type="submit" disabled={saving} className="btn-primary">
+            <button type="button" onClick={onClose} className="btn-secondary touch-manipulation">Cancelar</button>
+            <button type="submit" disabled={saving} className="btn-primary touch-manipulation">
               {saving ? 'Salvando...' : supplier ? 'Atualizar' : 'Criar Fornecedor'}
             </button>
           </div>
@@ -188,7 +188,7 @@ export default function Suppliers() {
           <h1 className="page-title">Fornecedores</h1>
           <p className="text-gray-500 mt-1">Gerencie seus fornecedores</p>
         </div>
-        <button onClick={() => { setEditing(null); setModalOpen(true); }} className="btn-primary flex items-center gap-2">
+        <button onClick={() => { setEditing(null); setModalOpen(true); }} className="btn-primary flex items-center gap-2 touch-manipulation">
           <Plus className="w-4 h-4" /> Novo Fornecedor
         </button>
       </div>
@@ -235,8 +235,8 @@ export default function Suppliers() {
                   </td>
                   <td className="table-cell">
                     <div className="flex gap-2">
-                      <button onClick={() => { setEditing(s); setModalOpen(true); }} className="p-1 hover:bg-gray-100 rounded"><Edit2 className="w-4 h-4 text-gray-500" /></button>
-                      <button onClick={() => handleDelete(s)} className="p-1 hover:bg-red-50 rounded"><Trash2 className="w-4 h-4 text-red-500" /></button>
+                      <button onClick={() => { setEditing(s); setModalOpen(true); }} className="p-1 hover:bg-gray-100 rounded touch-manipulation"><Edit2 className="w-4 h-4 text-gray-500" /></button>
+                      <button onClick={() => handleDelete(s)} className="p-1 hover:bg-red-50 rounded touch-manipulation"><Trash2 className="w-4 h-4 text-red-500" /></button>
                     </div>
                   </td>
                 </tr>

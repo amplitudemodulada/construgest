@@ -118,7 +118,7 @@ export default function NewSale() {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
-        <button onClick={() => navigate('/sales')} className="p-2 hover:bg-gray-100 rounded-lg">
+        <button onClick={() => navigate('/sales')} className="p-2 hover:bg-gray-100 rounded-lg touch-manipulation">
           <ArrowLeft className="w-5 h-5" />
         </button>
         <div>
@@ -168,7 +168,7 @@ export default function NewSale() {
                           <button
                             onClick={() => addToCart(p)}
                             disabled={p.current_stock <= 0}
-                            className="p-1.5 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50"
+                            className="p-1.5 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 touch-manipulation"
                           >
                             <Plus className="w-4 h-4" />
                           </button>
@@ -209,18 +209,18 @@ export default function NewSale() {
                         <td className="px-3 py-2 text-right">{formatCurrency(item.unit_price)}</td>
                         <td className="px-3 py-2 text-right">
                           <div className="inline-flex items-center gap-1 border rounded-lg">
-                            <button onClick={() => updateQuantity(item.product_id, item.quantity - 1)} className="p-1 hover:bg-gray-100">
+                            <button onClick={() => updateQuantity(item.product_id, item.quantity - 1)} className="p-1 hover:bg-gray-100 touch-manipulation">
                               <Minus className="w-3 h-3" />
                             </button>
                             <span className="w-8 text-center">{item.quantity}</span>
-                            <button onClick={() => updateQuantity(item.product_id, item.quantity + 1)} className="p-1 hover:bg-gray-100">
+                            <button onClick={() => updateQuantity(item.product_id, item.quantity + 1)} className="p-1 hover:bg-gray-100 touch-manipulation">
                               <Plus className="w-3 h-3" />
                             </button>
                           </div>
                         </td>
                         <td className="px-3 py-2 text-right font-medium">{formatCurrency(item.total_price)}</td>
                         <td className="px-3 py-2 text-center">
-                          <button onClick={() => removeFromCart(item.product_id)} className="p-1 hover:bg-red-50 rounded text-red-500">
+                          <button onClick={() => removeFromCart(item.product_id)} className="p-1 hover:bg-red-50 rounded text-red-500 touch-manipulation">
                             <Trash2 className="w-4 h-4" />
                           </button>
                         </td>
@@ -244,7 +244,7 @@ export default function NewSale() {
                   <p className="font-medium text-sm">{selectedCustomer.name}</p>
                   <p className="text-xs text-gray-500">{selectedCustomer.document}</p>
                 </div>
-                <button onClick={() => setSelectedCustomer(null)} className="text-gray-400 hover:text-red-500">
+                <button onClick={() => setSelectedCustomer(null)} className="text-gray-400 hover:text-red-500 touch-manipulation">
                   <X className="w-4 h-4" />
                 </button>
               </div>
@@ -261,7 +261,7 @@ export default function NewSale() {
                     {filteredCustomers.map(c => (
                       <button
                         key={c.id}
-                        className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 border-b border-gray-100 last:border-0"
+                        className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 border-b border-gray-100 last:border-0 touch-manipulation"
                         onClick={() => { setSelectedCustomer(c); setShowCustomerSearch(false); setCustomerSearch(''); }}
                       >
                         <p className="font-medium">{c.name}</p>
@@ -336,7 +336,7 @@ export default function NewSale() {
             <button
               onClick={handleSubmit}
               disabled={saving || cart.length === 0}
-              className="btn-primary w-full mt-4 py-3 flex items-center justify-center gap-2"
+              className="btn-primary w-full mt-4 py-3 flex items-center justify-center gap-2 touch-manipulation"
             >
               {saving ? (
                 <><div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div> Finalizando...</>

@@ -57,7 +57,7 @@ export default function Sales() {
           <h1 className="page-title">Vendas</h1>
           <p className="text-gray-500 mt-1">Gerencie suas vendas e orçamentos</p>
         </div>
-        <button onClick={() => navigate('/sales/new')} className="btn-primary flex items-center gap-2">
+        <button onClick={() => navigate('/sales/new')} className="btn-primary flex items-center gap-2 touch-manipulation">
           <Plus className="w-4 h-4" /> Nova Venda
         </button>
       </div>
@@ -84,7 +84,7 @@ export default function Sales() {
           ) : sales.length === 0 ? (
             <div className="text-center py-8 text-gray-400">
               <p>Nenhuma venda encontrada</p>
-              <button onClick={() => navigate('/sales/new')} className="btn-primary mt-4">Criar Primeira Venda</button>
+              <button onClick={() => navigate('/sales/new')} className="btn-primary mt-4 touch-manipulation">Criar Primeira Venda</button>
             </div>
           ) : sales.map(sale => (
             <div key={sale.id} className="border border-gray-200 rounded-lg overflow-hidden">
@@ -136,7 +136,7 @@ export default function Sales() {
                     </table>
                   </div>
                   {sale.status !== 'cancelado' && sale.status !== 'concluido' && (
-                    <button onClick={() => handleCancel(sale.id)} className="btn-danger text-xs flex items-center gap-1">
+                    <button onClick={() => handleCancel(sale.id)} className="btn-danger text-xs flex items-center gap-1 touch-manipulation">
                       <XCircle className="w-3 h-3" /> Cancelar Venda
                     </button>
                   )}

@@ -54,7 +54,7 @@ export default function Purchases() {
           <h1 className="page-title">Pedidos de Compra</h1>
           <p className="text-gray-500 mt-1">Gerencie pedidos a fornecedores</p>
         </div>
-        <button onClick={() => setShowNew(true)} className="btn-primary flex items-center gap-2">
+        <button onClick={() => setShowNew(true)} className="btn-primary flex items-center gap-2 touch-manipulation">
           <Plus className="w-4 h-4" /> Novo Pedido
         </button>
       </div>
@@ -78,7 +78,7 @@ export default function Purchases() {
           ) : orders.length === 0 ? (
             <div className="text-center py-8 text-gray-400">
               <p>Nenhum pedido encontrado</p>
-              <button onClick={() => setShowNew(true)} className="btn-primary mt-4">Criar Primeiro Pedido</button>
+              <button onClick={() => setShowNew(true)} className="btn-primary mt-4 touch-manipulation">Criar Primeiro Pedido</button>
             </div>
           ) : orders.map(order => (
             <div key={order.id} className="border border-gray-200 rounded-lg overflow-hidden">
@@ -133,12 +133,12 @@ export default function Purchases() {
                   </div>
                   <div className="flex gap-2">
                     {order.status !== 'recebido' && order.status !== 'cancelado' && (
-                      <button onClick={() => handleReceive(order.id)} className="btn-primary text-xs flex items-center gap-1">
+                      <button onClick={() => handleReceive(order.id)} className="btn-primary text-xs flex items-center gap-1 touch-manipulation">
                         <Truck className="w-3 h-3" /> Receber Pedido
                       </button>
                     )}
                     {order.status !== 'recebido' && order.status !== 'cancelado' && (
-                      <button onClick={() => handleCancel(order.id)} className="btn-danger text-xs flex items-center gap-1">
+                      <button onClick={() => handleCancel(order.id)} className="btn-danger text-xs flex items-center gap-1 touch-manipulation">
                         <XCircle className="w-3 h-3" /> Cancelar
                       </button>
                     )}
@@ -216,7 +216,7 @@ function NewPurchaseModal({ onClose, onSaved }: { onClose: () => void; onSaved: 
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl my-8" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
           <h2 className="text-lg font-semibold">Novo Pedido de Compra</h2>
-          <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded-lg"><X className="w-5 h-5" /></button>
+          <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded-lg touch-manipulation"><X className="w-5 h-5" /></button>
         </div>
         <div className="p-6 space-y-4">
           {error && <div className="bg-red-50 text-red-700 px-4 py-2 rounded-lg text-sm">{error}</div>}
@@ -249,7 +249,7 @@ function NewPurchaseModal({ onClose, onSaved }: { onClose: () => void; onSaved: 
               <input type="number" placeholder="Qtd" className="input-field" value={selectedQty} onChange={e => setSelectedQty(Number(e.target.value))} min="1" />
               <div className="flex gap-2">
                 <input type="number" step="0.01" placeholder="Preço" className="input-field" value={selectedPrice} onChange={e => setSelectedPrice(Number(e.target.value))} />
-                <button onClick={addItem} className="btn-primary px-3"><Plus className="w-4 h-4" /></button>
+                <button onClick={addItem} className="btn-primary px-3 touch-manipulation"><Plus className="w-4 h-4" /></button>
               </div>
             </div>
           </div>
@@ -274,7 +274,7 @@ function NewPurchaseModal({ onClose, onSaved }: { onClose: () => void; onSaved: 
                       <td className="px-2 py-2 text-right">{formatCurrency(item.unit_price)}</td>
                       <td className="px-2 py-2 text-right font-medium">{formatCurrency(item.quantity * item.unit_price)}</td>
                       <td className="px-2 py-2 text-center">
-                        <button onClick={() => removeItem(i)} className="text-red-500 hover:text-red-700"><X className="w-4 h-4" /></button>
+                        <button onClick={() => removeItem(i)} className="text-red-500 hover:text-red-700 touch-manipulation"><X className="w-4 h-4" /></button>
                       </td>
                     </tr>
                   ))}
@@ -296,8 +296,8 @@ function NewPurchaseModal({ onClose, onSaved }: { onClose: () => void; onSaved: 
           </div>
 
           <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
-            <button onClick={onClose} className="btn-secondary">Cancelar</button>
-            <button onClick={handleSubmit} disabled={saving} className="btn-primary">
+            <button onClick={onClose} className="btn-secondary touch-manipulation">Cancelar</button>
+            <button onClick={handleSubmit} disabled={saving} className="btn-primary touch-manipulation">
               {saving ? 'Criando...' : 'Criar Pedido'}
             </button>
           </div>
