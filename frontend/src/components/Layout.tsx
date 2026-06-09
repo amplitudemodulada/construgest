@@ -3,7 +3,7 @@ import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import {
   LayoutDashboard, Package, Users, Building2, ShoppingCart,
-  DollarSign, ShoppingBag, BarChart3, LogOut, Menu, X,
+  DollarSign, ShoppingBag, BarChart3, FileText, LogOut, Menu, X,
   ChevronDown, Bell, HardHat
 } from 'lucide-react';
 
@@ -12,6 +12,7 @@ const navItems = [
   { to: '/products', icon: Package, label: 'Produtos' },
   { to: '/customers', icon: Users, label: 'Clientes' },
   { to: '/suppliers', icon: Building2, label: 'Fornecedores' },
+  { to: '/quotes', icon: FileText, label: 'Orçamentos' },
   { to: '/sales', icon: ShoppingCart, label: 'Vendas' },
   { to: '/financial', icon: DollarSign, label: 'Financeiro' },
   { to: '/purchases', icon: ShoppingBag, label: 'Compras' },

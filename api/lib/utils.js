@@ -60,4 +60,11 @@ function generateOrderNumber() {
   return `PC-${ts}-${rand}`;
 }
 
-module.exports = { verifyPassword, hashPassword, createAccessToken, getCurrentUser, requireAuth, requireRole, generateInvoiceNumber, generateOrderNumber, SECRET_KEY };
+function generateQuoteNumber() {
+  const d = new Date();
+  const ts = `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}${String(d.getHours()).padStart(2,'0')}${String(d.getMinutes()).padStart(2,'0')}${String(d.getSeconds()).padStart(2,'0')}`;
+  const rand = String(Math.floor(Math.random() * 900) + 100);
+  return `ORC-${ts}-${rand}`;
+}
+
+module.exports = { verifyPassword, hashPassword, createAccessToken, getCurrentUser, requireAuth, requireRole, generateInvoiceNumber, generateOrderNumber, generateQuoteNumber, SECRET_KEY };

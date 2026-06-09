@@ -201,6 +201,37 @@ export interface DashboardData {
   }[];
 }
 
+export interface QuoteItem {
+  id?: number;
+  product_id: number;
+  quantity: number;
+  unit_price: number;
+  total_price: number;
+  product_name?: string;
+  product_code?: string;
+  product?: { id: number; name: string; code: string; unit?: string };
+}
+
+export interface Quote {
+  id: number;
+  quote_number: string;
+  customer_id?: number;
+  user_id: number;
+  subtotal: number;
+  discount: number;
+  total: number;
+  status: 'pendente' | 'aprovado' | 'recusado' | 'convertido';
+  valid_until?: string;
+  notes?: string;
+  customer_name?: string;
+  customer_email?: string;
+  customer_phone?: string;
+  customer_document?: string;
+  user_name?: string;
+  items: QuoteItem[];
+  created_at?: string;
+}
+
 export interface LoginCredentials {
   username: string;
   password: string;

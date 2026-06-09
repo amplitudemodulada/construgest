@@ -12,6 +12,9 @@ import NewSale from './pages/NewSale';
 import Financial from './pages/Financial';
 import Purchases from './pages/Purchases';
 import Reports from './pages/Reports';
+import Quotes from './pages/Quotes';
+import NewQuote from './pages/NewQuote';
+import QuoteDetail from './pages/QuoteDetail';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, loading } = useAuth();
@@ -35,6 +38,9 @@ function AppRoutes() {
         <Route path="financial" element={<Financial />} />
         <Route path="purchases" element={<Purchases />} />
         <Route path="reports" element={<Reports />} />
+        <Route path="quotes" element={<Quotes />} />
+        <Route path="quotes/new" element={<NewQuote />} />
+        <Route path="quotes/:id" element={<QuoteDetail />} />
       </Route>
     </Routes>
   );

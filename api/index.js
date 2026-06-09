@@ -8,10 +8,10 @@ const app = express();
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:4173',
+  'https://construgest-mu.vercel.app',
   'https://construgest-nine.vercel.app',
   'https://construtor-nine.vercel.app',
   'https://construtor.vercel.app',
-  'https://construgest.vercel.app',
   'https://construgest.vercel.app',
 ];
 
@@ -30,6 +30,7 @@ app.use('/api/sales', require('./lib/routes/sales'));
 app.use('/api/financial', require('./lib/routes/financial'));
 app.use('/api/purchases', require('./lib/routes/purchases'));
 app.use('/api/reports', require('./lib/routes/reports'));
+app.use('/api/quotes', require('./lib/routes/quotes'));
 
 // Health check
 app.get('/api/health', (req, res) => {
