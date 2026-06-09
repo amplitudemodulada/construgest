@@ -43,7 +43,7 @@ export default function Layout() {
         <div className="flex items-center gap-3 px-6 py-5 border-b border-gray-700">
           <HardHat className="w-8 h-8 text-yellow-400" />
           <div>
-            <h1 className="text-xl font-bold">ConstruGest</h1>
+            <h1 className="text-xl font-bold">Construtor 2026</h1>
             <p className="text-xs text-gray-400">Sistema de Gestão</p>
           </div>
         </div>

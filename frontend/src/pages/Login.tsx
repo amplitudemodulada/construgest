@@ -33,7 +33,7 @@ export default function Login() {
           <div className="inline-flex items-center justify-center w-16 h-16 bg-yellow-400 rounded-2xl mb-4">
             <HardHat className="w-8 h-8 text-gray-900" />
           </div>
-          <h1 className="text-3xl font-bold text-white">ConstruGest</h1>
+          <h1 className="text-3xl font-bold text-white">Construtor 2026</h1>
           <p className="text-gray-400 mt-1">Sistema de Gestão para Lojas de Materiais de Construção</p>
         </div>
 
@@ -94,14 +94,7 @@ export default function Login() {
             </button>
           </form>
 
-          <div className="mt-6 pt-6 border-t border-gray-200">
-            <p className="text-xs text-gray-500 text-center">
-              <strong>Credenciais de teste:</strong><br />
-              Admin: admin / admin123<br />
-              Vendedor: vendedor1 / vendedor123<br />
-              Estoquista: estoquista1 / estoque123
-            </p>
-          </div>
+
         </div>
       </div>
     </div>
