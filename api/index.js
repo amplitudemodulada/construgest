@@ -154,6 +154,82 @@ app.get('/api/backup/export', requireAuth, (req, res) => {
   res.json(data);
 });
 
+const multer = require('multer');
+const upload = multer({ dest: '/tmp/uploads/', limits: { fileSize: 100 * 1024 * 1024 } });
+
+app.post('/api/backup/restore', requireAuth, upload.single('backup'), (req, res) => {
+  if (!req.file) return res.status(400).json({ detail: 'Arquivo de backup obrigatório' });
+  try {
+    const uploadedPath = req.file.path;
+    const backupDb = new (require('better-sqlite3'))(uploadedPath);
+    const tables = ['users', 'categories', 'products', 'customers', 'suppliers', 'sales', 'sale_items', 'payments', 'purchases', 'purchase_items', 'quotes', 'quote_items', 'loyalty_programs', 'loyalty_points', 'stock_movements', 'audit_log'];
+    for (const table of tables) {
+      try { backupDb.prepare(`SELECT 1 FROM ${table} LIMIT 1`).get(); } catch { backupDb.close(); return res.status(400).json({ detail: `Backup inválido: tabela '${table}' não encontrada` }); }
+    }
+    const allData = {};
+    for (const table of tables) {
+      allData[table] = backupDb.prepare(`SELECT * FROM ${table}`).all();
+    }
+    backupDb.close();
+
+    const clearOrder = ['quote_items', 'quotes', 'sale_items', 'payments', 'sales', 'purchase_items', 'purchases', 'stock_movements', 'loyalty_points', 'loyalty_programs', 'audit_log', 'products', 'customers', 'suppliers', 'categories', 'users'];
+    for (const table of clearOrder) {
+      db.prepare(`DELETE FROM ${table}`).run();
+    }
+
+    for (const table of tables) {
+      const rows = allData[table];
+      if (!rows.length) continue;
+      const cols = Object.keys(rows[0]).filter(k => k !== 'id');
+      const placeholders = cols.map(() => '?').join(',');
+      const stmt = db.prepare(`INSERT INTO ${table} (${cols.join(',')}) VALUES (${placeholders})`);
+      const insertMany = db.transaction((rows) => {
+        for (const row of rows) {
+          stmt.run(...cols.map(c => row[c]));
+        }
+      });
+      insertMany(rows);
+    }
+
+    try { fs.unlinkSync(uploadedPath); } catch {}
+    res.json({ message: 'Restauro concluído com sucesso', tables_restored: tables.length });
+  } catch (err) {
+    return res.status(500).json({ detail: 'Erro ao restaurar backup: ' + err.message });
+  }
+});
+
+app.post('/api/backup/import', requireAuth, (req, res) => {
+  const data = req.body;
+  if (!data || typeof data !== 'object') return res.status(400).json({ detail: 'Dados JSON inválidos' });
+  try {
+    const tables = ['users', 'categories', 'products', 'customers', 'suppliers', 'sales', 'sale_items', 'payments', 'purchases', 'purchase_items', 'quotes', 'quote_items', 'loyalty_programs', 'loyalty_points', 'stock_movements', 'audit_log'];
+    const allData = {};
+    for (const table of tables) {
+      if (Array.isArray(data[table])) allData[table] = data[table];
+    }
+    const clearOrder = ['quote_items', 'quotes', 'sale_items', 'payments', 'sales', 'purchase_items', 'purchases', 'stock_movements', 'loyalty_points', 'loyalty_programs', 'audit_log', 'products', 'customers', 'suppliers', 'categories', 'users'];
+    for (const table of clearOrder) {
+      db.prepare(`DELETE FROM ${table}`).run();
+    }
+    for (const table of tables) {
+      const rows = allData[table];
+      if (!rows?.length) continue;
+      const cols = Object.keys(rows[0]).filter(k => k !== 'id');
+      const placeholders = cols.map(() => '?').join(',');
+      const stmt = db.prepare(`INSERT INTO ${table} (${cols.join(',')}) VALUES (${placeholders})`);
+      const insertMany = db.transaction((rows) => {
+        for (const row of rows) {
+          stmt.run(...cols.map(c => row[c]));
+        }
+      });
+      insertMany(rows);
+    }
+    res.json({ message: 'Importação concluída com sucesso', tables_imported: tables.filter(t => allData[t]?.length).length });
+  } catch (err) {
+    return res.status(500).json({ detail: 'Erro ao importar dados: ' + err.message });
+  }
+});
+
 // 404 handler
 app.use((req, res) => {
   res.status(404).json({ detail: 'Endpoint não encontrado' });
