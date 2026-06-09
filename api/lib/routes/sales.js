@@ -24,7 +24,7 @@ router.get('/:id', requireAuth, (req, res) => {
 });
 
 router.post('/', requireAuth, (req, res) => {
-  const { customer_id, items, discount, payment_method, installments, notes } = req.body;
+  const { customer_id, items, discount, discount_type, payment_method, installments, status, notes } = req.body;
   if (!items?.length) return res.status(400).json({ detail: 'Itens são obrigatórios' });
 
   const invoiceNumber = generateInvoiceNumber();
@@ -42,11 +42,12 @@ router.post('/', requireAuth, (req, res) => {
     saleItems.push({ product_id: product.id, quantity: qty, unit_price: unitPrice, total_price: totalPrice, current_stock: product.current_stock, name: product.name });
   }
 
-  const disc = parseFloat(discount) || 0;
+  const discRaw = parseFloat(discount) || 0;
+  const disc = discount_type === 'percentual' ? subtotal * (discRaw / 100) : discRaw;
   const total = subtotal - disc;
 
   const r = db.prepare('INSERT INTO sales (invoice_number, customer_id, user_id, subtotal, discount, total, payment_method, installments, notes, status) VALUES (?,?,?,?,?,?,?,?,?,?)').run(
-    invoiceNumber, customer_id || null, req.user.id, subtotal, disc, total, payment_method || 'dinheiro', installments || 1, notes || null, 'concluida'
+    invoiceNumber, customer_id || null, req.user.id, subtotal, disc, total, payment_method || 'dinheiro', installments || 1, notes || null, status || 'concluida'
   );
   const saleId = r.lastInsertRowid;
 
@@ -57,7 +58,7 @@ router.post('/', requireAuth, (req, res) => {
     updStock.run(si.quantity, si.product_id);
   }
 
-  if (payment_method === 'credito') {
+  if (payment_method === 'credito' || payment_method === 'cartao_credito') {
     const dueDate = new Date();
     const installmentAmount = total / (installments || 1);
     const insPay = db.prepare("INSERT INTO payments (sale_id, type, description, amount, due_date, status) VALUES (?, 'receber', ?, ?, ?, 'pendente')");
@@ -67,7 +68,7 @@ router.post('/', requireAuth, (req, res) => {
       insPay.run(saleId, `${i+1}/${installments}`, installmentAmount, dd.toISOString().slice(0, 10));
     }
   } else {
-    db.prepare("INSERT INTO payments (sale_id, type, description, amount, due_date, paid_date, status) VALUES (?,'receber','Pagamento à vista',?,datetime('now'),'pago')").run(saleId, total);
+    db.prepare("INSERT INTO payments (sale_id, type, description, amount, due_date, paid_date, status) VALUES (?,'receber','Pagamento à vista',?,datetime('now'),datetime('now'),'pago')").run(saleId, total);
   }
 
   if (customer_id) {
@@ -89,6 +90,18 @@ router.put('/:id', requireAuth, (req, res) => {
   if (!sale) return res.status(404).json({ detail: 'Venda não encontrada' });
   if (status) db.prepare('UPDATE sales SET status = ? WHERE id = ?').run(status, req.params.id);
   if (notes !== undefined) db.prepare('UPDATE sales SET notes = ? WHERE id = ?').run(notes, req.params.id);
+  res.json(db.prepare(`SELECT s.*, c.name as customer_name, u.full_name as user_name FROM sales s LEFT JOIN customers c ON s.customer_id = c.id LEFT JOIN users u ON s.user_id = u.id WHERE s.id = ?`).get(req.params.id));
+});
+
+router.put('/:id/cancel', requireAuth, (req, res) => {
+  const sale = db.prepare('SELECT * FROM sales WHERE id = ?').get(req.params.id);
+  if (!sale) return res.status(404).json({ detail: 'Venda não encontrada' });
+  if (sale.status === 'cancelado') return res.status(400).json({ detail: 'Venda já cancelada' });
+  const items = db.prepare('SELECT * FROM sale_items WHERE sale_id = ?').all(req.params.id);
+  for (const item of items) {
+    db.prepare('UPDATE products SET current_stock = current_stock + ? WHERE id = ?').run(item.quantity, item.product_id);
+  }
+  db.prepare("UPDATE sales SET status = 'cancelado' WHERE id = ?").run(req.params.id);
   res.json(db.prepare(`SELECT s.*, c.name as customer_name, u.full_name as user_name FROM sales s LEFT JOIN customers c ON s.customer_id = c.id LEFT JOIN users u ON s.user_id = u.id WHERE s.id = ?`).get(req.params.id));
 });
 

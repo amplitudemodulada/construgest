@@ -74,6 +74,24 @@ router.put('/:id', requireRole('admin', 'estoquista'), (req, res) => {
   res.json(db.prepare(`SELECT po.*, s.company_name as supplier_name, u.full_name as user_name FROM purchases po LEFT JOIN suppliers s ON po.supplier_id = s.id LEFT JOIN users u ON po.user_id = u.id WHERE po.id = ?`).get(req.params.id));
 });
 
+router.put('/:id/receive', requireRole('admin', 'estoquista'), (req, res) => {
+  const po = db.prepare('SELECT * FROM purchases WHERE id = ?').get(req.params.id);
+  if (!po) return res.status(404).json({ detail: 'Compra não encontrada' });
+  db.prepare("UPDATE purchases SET status = 'recebido' WHERE id = ?").run(req.params.id);
+  res.json(db.prepare(`SELECT po.*, s.company_name as supplier_name, u.full_name as user_name FROM purchases po LEFT JOIN suppliers s ON po.supplier_id = s.id LEFT JOIN users u ON po.user_id = u.id WHERE po.id = ?`).get(req.params.id));
+});
+
+router.put('/:id/cancel', requireRole('admin', 'estoquista'), (req, res) => {
+  const po = db.prepare('SELECT * FROM purchases WHERE id = ?').get(req.params.id);
+  if (!po) return res.status(404).json({ detail: 'Compra não encontrada' });
+  const items = db.prepare('SELECT * FROM purchase_items WHERE purchase_id = ?').all(req.params.id);
+  for (const item of items) {
+    db.prepare('UPDATE products SET current_stock = current_stock - ? WHERE id = ?').run(item.quantity, item.product_id);
+  }
+  db.prepare("UPDATE purchases SET status = 'cancelado' WHERE id = ?").run(req.params.id);
+  res.json(db.prepare(`SELECT po.*, s.company_name as supplier_name, u.full_name as user_name FROM purchases po LEFT JOIN suppliers s ON po.supplier_id = s.id LEFT JOIN users u ON po.user_id = u.id WHERE po.id = ?`).get(req.params.id));
+});
+
 router.delete('/:id', requireRole('admin'), (req, res) => {
   const po = db.prepare('SELECT * FROM purchases WHERE id = ?').get(req.params.id);
   if (!po) return res.status(404).json({ detail: 'Compra não encontrada' });
