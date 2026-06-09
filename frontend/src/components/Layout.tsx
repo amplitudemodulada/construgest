@@ -3,7 +3,7 @@ import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import {
   LayoutDashboard, Package, Users, Building2, ShoppingCart,
-  DollarSign, ShoppingBag, BarChart3, FileText, LogOut, Menu, X,
+  DollarSign, ShoppingBag, BarChart3, FileText, Database, LogOut, Menu, X,
   ChevronDown, Bell, HardHat
 } from 'lucide-react';
 
@@ -17,6 +17,7 @@ const navItems = [
   { to: '/financial', icon: DollarSign, label: 'Financeiro' },
   { to: '/purchases', icon: ShoppingBag, label: 'Compras' },
   { to: '/reports', icon: BarChart3, label: 'Relatórios' },
+  { to: '/backup', icon: Database, label: 'Backup' },
 ];
 
 const roleLabels: Record<string, string> = {

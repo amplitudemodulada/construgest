@@ -15,6 +15,7 @@ import Reports from './pages/Reports';
 import Quotes from './pages/Quotes';
 import NewQuote from './pages/NewQuote';
 import QuoteDetail from './pages/QuoteDetail';
+import Backup from './pages/Backup';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, loading } = useAuth();
@@ -41,6 +42,7 @@ function AppRoutes() {
         <Route path="quotes" element={<Quotes />} />
         <Route path="quotes/new" element={<NewQuote />} />
         <Route path="quotes/:id" element={<QuoteDetail />} />
+        <Route path="backup" element={<Backup />} />
       </Route>
     </Routes>
   );

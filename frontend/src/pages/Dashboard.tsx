@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import { useAuth } from '../contexts/AuthContext';
 import { DashboardData } from '../types';
-import { Package, ShoppingCart, Users, DollarSign, TrendingUp, AlertTriangle, ArrowUpRight, ArrowDownRight } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
+import { Package, ShoppingCart, Users, DollarSign, TrendingUp, AlertTriangle, ArrowUpRight, ArrowDownRight, HardHat, X, Sparkles } from 'lucide-react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 const formatCurrency = (value: number) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
@@ -12,8 +13,18 @@ const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showWelcome, setShowWelcome] = useState(false);
+
+  useEffect(() => {
+    const welcomed = sessionStorage.getItem('welcome_shown');
+    if (!welcomed) {
+      setShowWelcome(true);
+      sessionStorage.setItem('welcome_shown', 'true');
+    }
+  }, []);
 
   useEffect(() => {
     api.get('/reports/dashboard').then(res => {
@@ -50,6 +61,40 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
+      {showWelcome && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setShowWelcome(false)}>
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 relative animate-fadeIn" onClick={e => e.stopPropagation()}>
+            <button onClick={() => setShowWelcome(false)} className="absolute top-4 right-4 p-1 hover:bg-gray-100 rounded-lg touch-manipulation">
+              <X className="w-5 h-5 text-gray-400" />
+            </button>
+            <div className="text-center">
+              <div className="mx-auto w-16 h-16 bg-primary-100 rounded-2xl flex items-center justify-center mb-4">
+                <HardHat className="w-8 h-8 text-primary-600" />
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900">
+                Bem-vindo, <span className="text-primary-600">{user?.full_name?.split(' ')[0]}</span>!
+              </h2>
+              <div className="flex items-center justify-center gap-1 mt-2 text-sm text-gray-500">
+                <Sparkles className="w-4 h-4 text-yellow-500" />
+                <span>{new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</span>
+              </div>
+              <p className="text-gray-500 mt-4 leading-relaxed">
+                Que bom ter você aqui! Vamos transformar ideias em obras e construir resultados incríveis juntos.
+              </p>
+              <div className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 bg-gray-100 rounded-full text-xs text-gray-600 font-medium">
+                <HardHat className="w-3 h-3" />
+                {user?.role === 'admin' ? 'Administrador' : user?.role === 'vendedor' ? 'Vendedor' : user?.role === 'estoquista' ? 'Estoquista' : user?.role || 'Usuário'}
+              </div>
+              <button
+                onClick={() => setShowWelcome(false)}
+                className="btn-primary w-full mt-6 py-3 flex items-center justify-center gap-2 touch-manipulation"
+              >
+                <HardHat className="w-5 h-5" /> Bora trabalhar!
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <div>
         <h1 className="page-title">Dashboard</h1>
         <p className="text-gray-500 mt-1">Visão geral do negócio</p>

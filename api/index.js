@@ -128,6 +128,32 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', version: '1.0.0', app: 'Construtor Gestão' });
 });
 
+// Backup endpoints
+const fs = require('fs');
+
+app.get('/api/backup/download', requireAuth, (req, res) => {
+  const dbPath = require('./lib/db').dbPath;
+  const stat = fs.statSync(dbPath);
+  res.setHeader('Content-Type', 'application/octet-stream');
+  res.setHeader('Content-Disposition', `attachment; filename=construtor-backup-${new Date().toISOString().slice(0,10)}.db`);
+  res.setHeader('Content-Length', stat.size);
+  const stream = fs.createReadStream(dbPath);
+  stream.pipe(res);
+});
+
+app.get('/api/backup/export', requireAuth, (req, res) => {
+  const tables = ['users', 'categories', 'products', 'customers', 'suppliers', 'sales', 'sale_items', 'payments', 'purchases', 'purchase_items', 'quotes', 'quote_items', 'loyalty_programs', 'loyalty_points', 'stock_movements', 'audit_log'];
+  const data = {};
+  for (const table of tables) {
+    try { data[table] = db.prepare(`SELECT * FROM ${table}`).all(); } catch { data[table] = []; }
+  }
+  data._exported_at = new Date().toISOString();
+  data._version = '1.0.0';
+  res.setHeader('Content-Type', 'application/json');
+  res.setHeader('Content-Disposition', `attachment; filename=construtor-export-${new Date().toISOString().slice(0,10)}.json`);
+  res.json(data);
+});
+
 // 404 handler
 app.use((req, res) => {
   res.status(404).json({ detail: 'Endpoint não encontrado' });

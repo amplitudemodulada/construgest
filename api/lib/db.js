@@ -217,3 +217,4 @@ db.exec(`
 `);
 
 module.exports = db;
+module.exports.dbPath = DB_PATH;
