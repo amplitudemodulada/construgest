@@ -1,0 +1,15 @@
+{
+  "buildCommand": "cd frontend && npm install && npm run build",
+  "outputDirectory": "frontend/dist",
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/$1" },
+    { "source": "/(.*)", "destination": "/frontend/dist/index.html" }
+  ],
+  "functions": {
+    "api/index.py": {
+      "runtime": "vercel-python@3.0.0",
+      "maxDuration": 30,
+      "memory": 300
+    }
+  }
+}
