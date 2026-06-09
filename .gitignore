@@ -28,9 +28,10 @@ frontend/.vercel
 .DS_Store
 Thumbs.db
 
-# Uploads
-backend/uploads/*
-!backend/uploads/.gitkeep
+# API
+api/node_modules/
 
 # Vercel
+.vercel
+
 .vercel
